@@ -1,0 +1,12 @@
+id,title,author,genres,publication_year,language,copies,available
+1,Anna Karenina,Leo Tolstoy,Novel,1878,Russian,5,5
+2,Little Women,Louisa May Alcott,Novel,1868,English,5,5
+3,The Shining,Stephen King,Novel,1977,English,5,5
+4,The Alchemist,Paulo Coelho,Novel,1988,Portuguese,5,5
+5,The Diary of a Young Girl,Anne Frank,Autobiography,1947,English,5,5
+6,The Immortal Life of Henrietta Lacks,Rebecca Skloot,Biography,2010,English,5,5
+7,The Sixth Extinction: An Unnatural History,Elizabeth Kolbert,Non-fiction,2014,English,5,5
+8,Oru Desathinte Katha,S. K. Pottekkatt,Novel,1971,Malayalam,5,5
+9,Aarachaar,K. R. Meera,Novel,2012,Malayalam,5,5
+10,Manju,M. T. Vasudevan Nair,Novel,1964,Malayalam,5,5
+11,balarama,mayavi,comedy,1885,Malayalam,5,5
