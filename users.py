@@ -1,5 +1,8 @@
 import pandas
 
+from style import clear_screen
+from style import Style
+
 users = pandas.read_csv('users.csv')
 
 
@@ -8,28 +11,35 @@ def save_user(data):
 
 
 def login():
+    print(Style.BOLD + Style.GREEN + f'\n\n\t\t --LOGIN--\n' + Style.RESET)
     try:
         user_id = int(input('Enter your user id : '))
     except ValueError:
-        print("please enter a valid user id")
+        clear_screen()
+        print(Style.RED + "please enter a valid user id" + Style.RESET)
         return False, None
 
-    try:
-        users.set_index('id', inplace=False)
-        user = users.loc[users['id'] == user_id]
-        print(user)
-    except Exception as e:
-        print(f"Invalid id {e}")
+    user = users.loc[users['id'] == user_id]
+
+    if user.empty:
+        clear_screen()
+        print(Style.RED + "please enter a valid user id" + Style.RESET)
+        return False, None
+
+    if user['is_admin'].values.astype(int)[0] == 0:
+        clear_screen()
+        print(Style.RED + "please enter a valid user id" + Style.RESET)
         return False, None
 
     password = str(input('Enter your password: '))
-    print(password)
-    print(user['password'])
     if password == user['password'].values.astype(str)[0]:
-        print("login success")
+        clear_screen()
+        print(Style.GREEN + f"Login Successful" + Style.RESET)
+        print(Style.BOLD + Style.GREEN + f"Welcome Admin" + Style.RESET)
         return True, user
     else:
-        print("invalid password")
+        clear_screen()
+        print(Style.RED + "please enter a valid password" + Style.RESET)
     return False, None
 
 

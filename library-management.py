@@ -1,46 +1,21 @@
-import os
-
 from books import add_book
 from books import issue_book
 from books import issued_history
 from books import list_books
 from books import return_book
 from books import search_books
+from style import clear_screen
 from users import login
-from users import register
-
-
-def clear_screen():
-    try:
-        os.system('clear')
-    except Exception as e:
-        print(e)
-        os.system('cls')
-
-
-print("Loading")
 
 authenticated_user = None
 
+clear_screen()
 while authenticated_user is None:
-    print("1. Login")
-    print('2. Register')
-    choice = int(input('Enter your Choice : '))
-
-    if choice == 1:
-        is_logged_in = False
-        while is_logged_in is False:
-            is_logged_in, authenticated_user = login()
-
-    elif choice == 2:
-        is_registered = False
-        while is_registered is False:
-            is_registered, authenticated_user = register()
-    else:
-        pass
+    is_logged_in = False
+    while is_logged_in is False:
+        is_logged_in, authenticated_user = login()
 
 is_admin = bool(authenticated_user['is_admin'].values.astype(int)[0])
-
 
 while True:
     print(
@@ -56,6 +31,7 @@ while True:
             """
             5. Issue Book.\n
             6. Add Book.\n
+            7. Add User.\n
             """
         )
     print("Please select a choice to continue\n")
