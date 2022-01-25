@@ -16,6 +16,7 @@ class Style:
     WHITE = '\033[37m'
     UNDERLINE = '\033[4m'
     RESET = '\033[0m'
+    BARS = '-'
 
 
 def clear_screen():
