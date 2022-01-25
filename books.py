@@ -35,21 +35,49 @@ def list_books():
 
 
 def search_books():
+    clear_screen()
+
     while True:
-        print("1. Search by title: ")
-        print("2. Search by id: ")
-        print("3. Search by author: ")
-        print("4. Search by language: ")
-        print("6. Search by language: ")
-
-        search_choice = int("Enter your choice: ")
-
-        if search_choice == 1:
-            pass
-        elif search_choice == 2:
-            pass
+        print()
+        print()
+        print("~" * 24 + Style.BOLD + "SEARCH" + "~" * 24 + Style.RESET)
+        try:
+            print()
+            search_choice = int(input(f"{Style.BOLD}Book ID: {Style.RESET}"))
+        except ValueError:
+            clear_screen()
+            print(f"{Style.BOLD}{Style.RED} No Result Found {Style.RESET}")
+            try:
+                search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
+            except ValueError:
+                continue
+            else:
+                search_again = search_again.upper()
+                if not search_again == 'Y':
+                    break
         else:
-            pass
+            book = books.loc[books['id'] == search_choice]
+            if book.empty:
+                print(f"{Style.BOLD}{Style.RED} No Result Found {Style.RESET}")
+                try:
+                    search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
+                except ValueError:
+                    continue
+                else:
+                    search_again = search_again.upper()
+                    if not search_again == 'Y':
+                        break
+            else:
+                print(f"{Style.BOLD}{Style.GREEN} Result Found {Style.RESET}")
+                print_book_details(book)
+                try:
+                    search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
+                except ValueError:
+                    continue
+                else:
+                    search_again = search_again.upper()
+                    if not search_again == 'Y':
+                        break
 
 
 def print_book_details(book):

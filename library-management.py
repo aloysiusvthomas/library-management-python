@@ -23,7 +23,7 @@ while True:
     print("~" * 25 + Style.BOLD + "MENU" + "~" * 25 + Style.RESET)
     print("\n\n Please Select a choice to continue\n\n")
     print("1. List all Books.")
-    print("2. Search Books.")
+    print("2. Search Books by ID.")
     print("3. Issue Books.")
     print("4. Return Books.")
     print("5. Issued Books History.")
