@@ -1,12 +1,19 @@
 from datetime import date
+from datetime import datetime
 
 import pandas
 
 books = pandas.read_csv('books.csv')
+users = pandas.read_csv('users.csv')
+history = pandas.read_csv('issued_history.csv')
 
 
 def save_book(data):
     data.to_csv('books.csv', index=False)
+
+
+def save_history(data):
+    data.to_csv('issued_history.csv', index=False)
 
 
 def list_books():
@@ -31,16 +38,81 @@ def search_books():
             pass
 
 
+def print_book_details(book):
+    print(f"ID: {book['title'].values.astype(str)[0]}")
+    print(f"Title: {book['id'].values.astype(int)[0]} \t\t Author: {book['author'].values.astype(str)[0]}")
+    print(f"Genres: {book['genres'].values.astype(str)[0]} \t\t Year: {book['publication_year'].values.astype(int)[0]}")
+    print(
+        f"Language: {book['language'].values.astype(str)[0]} \t\t Available: {book['available'].values.astype(str)[0]}")
+
+
 def issue_book():
-    pass
+    now = datetime.now()
+    user = None
+    while True:
+        try:
+            user_id = int(input('Enter User ID: '))
+        except ValueError:
+            print("Enter a valid number")
+            continue
+        else:
+            user = users.loc[users['id'] == user_id]
+            print(f"ID: {user['id'].values.astype(int)[0]} \t\t Name: {user['name'].values.astype(str)[0]}")
+            break
+
+    while True:
+        try:
+            book_id = int(input('Enter Book ID: '))
+        except ValueError:
+            print("please enter a valid book id")
+            continue
+        else:
+            book = books.loc[books['id'] == book_id]
+            print_book_details(book)
+
+            if book['available'].values.astype(int)[0] > 0:
+                try:
+                    answer = str(input('Issue this book? (Y/n): '))
+                except ValueError:
+                    answer = 'Y'
+                answer = answer.upper()
+                if answer == 'Y':
+                    data = pandas.DataFrame({
+                        'id': [user['id'].values.astype(int)[0], ],
+                        'name': [user['name'].values.astype(str)[0], ],
+                        'book_id': [book['id'].values.astype(int)[0], ],
+                        'book_name': [book['title'].values.astype(str)[0], ],
+                        'issued_date': now.strftime("%m/%d/%Y"),
+                        'return_date': [book['title'].values.astype(str)[0], ],
+                        'is_returned': False,
+                    })
+                    result = pandas.concat([history, data])
+                    # TODO Update available books
+                    save_history(result)
+                    print("Book issued successfully")
+            else:
+                print("Book not available")
+            break
 
 
 def return_book():
+    while True:
+        try:
+            user_id = int(input('Enter User ID: '))
+        except ValueError:
+            print("Enter a valid number")
+            continue
+        else:
+            user = users.loc[users['id'] == user_id]
+            print(f"ID: {user['id'].values.astype(int)[0]} \t\t Name: {user['name'].values.astype(str)[0]}")
+            # TODO Display Borrowed Books
+            break
+
     pass
 
 
 def issued_history():
-    pass
+    print(history)
 
 
 def add_book():
@@ -132,4 +204,3 @@ def add_book():
     )
     result = pandas.concat([books, data])
     save_book(result)
-
