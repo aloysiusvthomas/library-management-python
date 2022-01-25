@@ -5,6 +5,7 @@ from books import list_books
 from books import return_book
 from books import search_books
 from style import clear_screen
+from style import Style
 from users import login
 
 authenticated_user = None
@@ -18,24 +19,19 @@ while authenticated_user is None:
 is_admin = bool(authenticated_user['is_admin'].values.astype(int)[0])
 
 while True:
-    print(
-        """
-        1. List all Books.\n
-        2. Search.\n
-        3. Issued Books.\n
-        4. Return Book.\n
-        """
-    )
-    if is_admin:
-        print(
-            """
-            5. Issue Book.\n
-            6. Add Book.\n
-            7. Add User.\n
-            """
-        )
-    print("Please select a choice to continue\n")
-    choice = int(input('Enter your Choice : '))
+    print("")
+    print("~" * 25 + Style.BOLD + "MENU" + "~" * 25 + Style.RESET)
+    print("\n\n Please Select a choice to continue\n\n")
+    print("1. List all Books.")
+    print("2. Search Books.")
+    print("3. Issue Books.")
+    print("4. Return Books.")
+    print("5. Issued Books History.")
+    print("6. Add Books.")
+    print("7. Add User.")
+    print("8. List All User.")
+
+    choice = int(input(Style.BOLD + '\n\nChoice : '))
 
     if choice == 1:
         list_books()

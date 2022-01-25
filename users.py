@@ -36,7 +36,7 @@ def login():
         clear_screen()
         print("\n\n" + Style.GREEN + f"Login Successful" + Style.RESET)
         print(
-            "\n" + Style.BOLD + Style.GREEN + Style.BARS * 10 + f"Welcome Admin" + Style.BARS * 10 + Style.RESET)
+            "\n" + Style.BOLD + Style.GREEN + '-' * 20 + f"Welcome Admin" + '-' * 21 + Style.RESET)
         return True, user
     else:
         clear_screen()
