@@ -3,6 +3,9 @@ from datetime import datetime
 
 import pandas
 
+from style import clear_screen
+from style import Style
+
 books = pandas.read_csv('books.csv')
 users = pandas.read_csv('users.csv')
 history = pandas.read_csv('issued_history.csv')
@@ -17,7 +20,18 @@ def save_history(data):
 
 
 def list_books():
-    print(books)
+    while True:
+        clear_screen()
+        for i in range(len(books)):
+            print_book_details(books.loc[books['id'] == i + 1])
+
+        try:
+            _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
+        except ValueError:
+            clear_screen()
+            break
+        clear_screen()
+        break
 
 
 def search_books():
@@ -39,11 +53,25 @@ def search_books():
 
 
 def print_book_details(book):
-    print(f"ID: {book['title'].values.astype(str)[0]}")
-    print(f"Title: {book['id'].values.astype(int)[0]} \t\t Author: {book['author'].values.astype(str)[0]}")
-    print(f"Genres: {book['genres'].values.astype(str)[0]} \t\t Year: {book['publication_year'].values.astype(int)[0]}")
-    print(
-        f"Language: {book['language'].values.astype(str)[0]} \t\t Available: {book['available'].values.astype(str)[0]}")
+    available = book['available'].values.astype(int)[0]
+    if available > 0:
+        available = f"{Style.GREEN}{available} Copies Available {Style.RESET}"
+    else:
+        available = f"{Style.RED}{Style.BOLD} Unavailable {Style.RESET}"
+
+    print()
+    print('~' * 54)
+    print('~' * 54)
+    print(f"ID: {Style.YELLOW}{book['id'].values.astype(int)[0]}\n{Style.RESET}")
+    print(f"Title: {Style.YELLOW} {Style.BOLD}{book['title'].values.astype(str)[0]}\n {Style.RESET}")
+    print(f"Author: {Style.MAGENTA}{book['author'].values.astype(str)[0]}\n {Style.RESET}")
+    print(f"Genres: {Style.CYAN}{book['genres'].values.astype(str)[0]} {Style.RESET}\n")
+    print(f"Year: {Style.WHITE}{book['publication_year'].values.astype(int)[0]} {Style.RESET}\n")
+    print(f"Language: {Style.BOLD}{book['language'].values.astype(str)[0]} {Style.RESET}\n")
+    print(f"Available: {available}")
+    print('~' * 54)
+    print('~' * 54)
+    print()
 
 
 def issue_book():

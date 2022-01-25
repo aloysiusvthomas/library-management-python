@@ -30,8 +30,12 @@ while True:
     print("6. Add Books.")
     print("7. Add User.")
     print("8. List All User.")
+    print("9. Exit.")
+    print()
+    print()
+    print(Style.BOLD + "~" * 54 + Style.RESET)
 
-    choice = int(input(Style.BOLD + '\n\nChoice : '))
+    choice = int(input(Style.BOLD + '\nChoice : ' + Style.RESET))
 
     if choice == 1:
         list_books()
@@ -43,8 +47,25 @@ while True:
         return_book()
     elif choice == 5:
         issued_history()
-
+        continue
     elif choice == 6:
         add_book()
+        continue
+    elif choice == 7:
+        add_book()
+        continue
+    elif choice == 8:
+        add_book()
+        continue
+    elif choice == 9:
+        print("""
+             ████████╗██╗░░██╗░█████╗░███╗░░██╗██╗░░██╗  ██╗░░░██╗░█████╗░██╗░░░██╗
+             ╚══██╔══╝██║░░██║██╔══██╗████╗░██║██║░██╔╝  ╚██╗░██╔╝██╔══██╗██║░░░██║
+             ░░░██║░░░███████║███████║██╔██╗██║█████═╝░  ░╚████╔╝░██║░░██║██║░░░██║
+             ░░░██║░░░██╔══██║██╔══██║██║╚████║██╔═██╗░  ░░╚██╔╝░░██║░░██║██║░░░██║
+             ░░░██║░░░██║░░██║██║░░██║██║░╚███║██║░╚██╗  ░░░██║░░░╚█████╔╝╚██████╔╝
+             ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝  ░░░╚═╝░░░░╚════╝░░╚═════╝░""")
+        break
     else:
-        print("ha")
+        print(Style.BOLD + Style.RED + "Invalid Choice " + Style.RESET)
+        continue
