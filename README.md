@@ -4,7 +4,7 @@
   
 
 ### Prerequisites
-- pandas
+- pandas==1.4.0
 - Python 3.6+
 
 
