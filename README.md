@@ -10,4 +10,8 @@
 
 ### How to run the script
 <!--Remove the below lines and add yours -->
-> python run.py
+    python run.py
+    
+  **Username:** admin
+      
+  **Password:**   pass
