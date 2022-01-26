@@ -39,12 +39,19 @@ def print_book_details(book):
 
 def print_history(books):
     for items in range(len(books)):
+
+        returned = books['is_returned'].values.astype(str)[0]
+        if returned == 'yes':
+            returned = f"{Style.GREEN}{returned.title()}{Style.RESET}"
+        else:
+            returned = f"{Style.RED}{Style.BOLD} No {Style.RESET}"
         print()
         print(f"No: {items + 1}\n")
         print(f"Book ID: {Style.YELLOW}{books['book_id'].values.astype(int)[0]}\n{Style.RESET}")
         print(f"Book Name: {Style.YELLOW} {Style.BOLD}{books['book_name'].values.astype(str)[0]}\n {Style.RESET}")
         print(f"Issued Date: {Style.MAGENTA}{books['issued_date'].values.astype(str)[0]}\n {Style.RESET}")
         print(f"Return Date: {Style.MAGENTA}{books['return_date'].values.astype(str)[0]} {Style.RESET}")
+        print(f"Is Returned: {returned}")
         print(Style.BLUE)
         print('-' * 54)
         print(Style.RESET)
@@ -269,8 +276,7 @@ def return_book():
             else:
                 books.loc[books['id'] == book_id, 'available'] = books.loc[books['id'] == book_id, 'available'] + 1
                 save_book(books)
-                returning_book = returning_book['is_returned'] = 'yes'
-                save_history(returning_book)
+
                 print(f"\n\n{Style.BOLD}{Style.GREEN} Book Returned successfully{Style.RESET}")
                 sleep(2)
                 clear_screen()
@@ -279,10 +285,27 @@ def return_book():
 
 def issued_history():
     history = pandas.read_csv('issued_history.csv')
-    print(history)
+    while True:
+        clear_screen()
+        if len(history) > 0:
+            print("~" * 16 + Style.BOLD + "ISSUED BOOKS HISTORY" + "~" * 16 + Style.RESET)
+            print_history(history)
+            print(f"{len(history)} records found")
+        else:
+            print(f"{Style.BOLD}{Style.RED}No records found {Style.RESET}")
+        try:
+            _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
+        except ValueError:
+            clear_screen()
+            break
+        clear_screen()
+        break
 
 
 def add_book():
+    clear_screen()
+    print("~" * 21 + Style.BOLD + "ADD NEW BOOK" + "~" * 21 + Style.RESET)
+    print()
     books = pandas.read_csv('books.csv')
     title = None
     author = None
@@ -292,31 +315,38 @@ def add_book():
     copies = None
     while True:
         try:
-            title = str(input('Enter book title : '))
-        except ValueError:
-            print("Enter a valid title")
+            title = input('Enter book title : ')
+        except ValueError as e:
+            print(f"{Style.BOLD}{Style.RED}Enter a valid title\n {Style.RESET}")
             continue
         else:
-            break
-
+            if title:
+                break
+            else:
+                print(f"{Style.BOLD}{Style.RED}Enter a valid title\n {Style.RESET}")
+                continue
     while True:
         try:
-            author = str(input('Enter author name : '))
+            author = input('Enter author name : ')
         except ValueError:
-            print("Enter a valid name")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid name\n {Style.RESET}")
             continue
         else:
-            break
+            if author:
+                break
+            else:
+                print(f"{Style.BOLD}{Style.RED}Enter a valid name\n {Style.RESET}")
+                continue
 
     while True:
         try:
             genres = str(input('Enter book genres : '))
         except ValueError:
-            print("Enter a valid genres")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid genres\n {Style.RESET}")
             continue
         else:
             if not genres.isalpha():
-                print("Enter a valid genres")
+                print(f"{Style.BOLD}{Style.RED}Enter a valid genres\n {Style.RESET}")
                 return False
             else:
                 break
@@ -325,12 +355,12 @@ def add_book():
         try:
             publication_year = int(input('Enter publication year : '))
         except ValueError:
-            print("Enter a valid year")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid year\n {Style.RESET}")
             continue
         else:
             today = date.today()
             if publication_year > today.year:
-                print("Enter a valid year")
+                print(f"{Style.BOLD}{Style.RED}Enter a valid year\n {Style.RESET}")
                 continue
             else:
                 break
@@ -339,11 +369,11 @@ def add_book():
         try:
             language = str(input('Enter book language : '))
         except ValueError:
-            print("Enter a valid language")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid language\n {Style.RESET}")
             continue
         else:
             if not language.isalpha():
-                print("Enter a valid language")
+                print(f"{Style.BOLD}{Style.RED}Enter a valid language\n {Style.RESET}")
                 continue
             else:
                 break
@@ -352,7 +382,7 @@ def add_book():
         try:
             copies = int(input('Enter number of copies: '))
         except ValueError:
-            print("Enter a valid number")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid number\n {Style.RESET}")
             continue
         else:
             break
@@ -371,4 +401,7 @@ def add_book():
         }
     )
     result = pandas.concat([books, data])
+    print(f"{Style.BOLD}{Style.GREEN}\n\nBOOK SAVED\n {Style.RESET}")
+    sleep(2)
+    clear_screen()
     save_book(result)
