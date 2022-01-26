@@ -14,15 +14,12 @@ def save_user(data):
 
 
 def print_user_details(user):
-    print()
-    print('~' * 54)
-    print('~' * 54)
     print(
-        f"\nID: {Style.YELLOW}{user['id'].values.astype(int)[0]}{Style.RESET} \t Name: {Style.MAGENTA} {Style.BOLD}{user['name'].values.astype(str)[0]}\n {Style.RESET}"
+        f"ID: {Style.YELLOW}{user['id'].values.astype(int)[0]}{Style.RESET} \t Name: {Style.MAGENTA} {Style.BOLD}{user['name'].values.astype(str)[0]} {Style.RESET}"
     )
-    print('~' * 54)
-    print('~' * 54)
-    print()
+    print(Style.BLUE)
+    print('-' * 54)
+    print(Style.RESET)
 
 
 def login():
@@ -83,7 +80,7 @@ def list_users():
         clear_screen()
         for i in range(len(users)):
             print_user_details(users.loc[users['id'] == i + 1])
-        print(f"{len(users)} books found")
+        print(f"{len(users)} Users found")
         try:
             _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
         except ValueError:

@@ -28,9 +28,6 @@ def print_book_details(book):
     else:
         available = f"{Style.RED}{Style.BOLD} Unavailable {Style.RESET}"
 
-    print()
-    print('~' * 54)
-    print('~' * 54)
     print(f"ID: {Style.YELLOW}{book['id'].values.astype(int)[0]}\n{Style.RESET}")
     print(f"Title: {Style.YELLOW} {Style.BOLD}{book['title'].values.astype(str)[0]}\n {Style.RESET}")
     print(f"Author: {Style.MAGENTA}{book['author'].values.astype(str)[0]}\n {Style.RESET}")
@@ -38,9 +35,9 @@ def print_book_details(book):
     print(f"Year: {Style.WHITE}{book['publication_year'].values.astype(int)[0]} {Style.RESET}\n")
     print(f"Language: {Style.BOLD}{book['language'].values.astype(str)[0]} {Style.RESET}\n")
     print(f"Available: {available}")
-    print('~' * 54)
-    print('~' * 54)
-    print()
+    print(Style.BLUE)
+    print('-' * 54)
+    print(Style.RESET)
 
 
 def print_history(book):
