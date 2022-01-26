@@ -8,9 +8,6 @@ from style import clear_screen
 from style import Style
 from users import print_user_details
 
-books = pandas.read_csv('books.csv')
-users = pandas.read_csv('users.csv')
-history = pandas.read_csv('issued_history.csv')
 
 
 def save_book(data):
@@ -45,6 +42,7 @@ def print_history(book):
 
 
 def list_books():
+    books = pandas.read_csv('books.csv')
     while True:
         clear_screen()
         for i in range(len(books)):
@@ -60,6 +58,7 @@ def list_books():
 
 
 def search_books():
+    books = pandas.read_csv('books.csv')
     clear_screen()
 
     while True:
@@ -106,6 +105,10 @@ def search_books():
 
 
 def issue_book():
+    books = pandas.read_csv('books.csv')
+    users = pandas.read_csv('users.csv')
+    history = pandas.read_csv('issued_history.csv')
+
     clear_screen()
     now = datetime.now()
     while True:
@@ -164,6 +167,8 @@ def issue_book():
 
 
 def return_book():
+    history = pandas.read_csv('issued_history.csv')
+    users = pandas.read_csv('users.csv')
     print()
     print()
     print("~" * 22 + Style.BOLD + "ISSUE BOOK" + "~" * 22 + Style.RESET)
@@ -201,10 +206,12 @@ def return_book():
 
 
 def issued_history():
+    history = pandas.read_csv('issued_history.csv')
     print(history)
 
 
 def add_book():
+    books = pandas.read_csv('books.csv')
     title = None
     author = None
     genres = None

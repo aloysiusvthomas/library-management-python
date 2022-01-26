@@ -69,5 +69,7 @@ while True:
              ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝  ░░░╚═╝░░░░╚════╝░░╚═════╝░""")
         break
     else:
+        clear_screen()
+        print(f"Choice: {choice}")
         print(Style.BOLD + Style.RED + "Invalid Choice " + Style.RESET)
         continue

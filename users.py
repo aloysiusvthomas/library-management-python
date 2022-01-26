@@ -1,3 +1,4 @@
+import getpass
 import random
 import string
 
@@ -5,8 +6,6 @@ import pandas
 
 from style import clear_screen
 from style import Style
-
-users = pandas.read_csv('users.csv')
 
 
 def save_user(data):
@@ -23,27 +22,25 @@ def print_user_details(user):
 
 
 def login():
+    users = pandas.read_csv('users.csv')
+    users = users.loc[users['is_admin'] == "1"]
     print(Style.BOLD + Style.GREEN + f'\n\n\t\t --LOGIN--\n' + Style.RESET)
     try:
-        user_id = int(input('Enter your user id : '))
+        username = str(input('Enter your username : '))
     except ValueError:
         clear_screen()
-        print(Style.RED + "please enter a valid user id" + Style.RESET)
+        print(Style.RED + "please enter a valid username" + Style.RESET)
         return False, None
 
-    user = users.loc[users['id'] == user_id]
+    user = users.loc[users['name'] == username]
 
     if user.empty:
         clear_screen()
-        print(Style.RED + "please enter a valid user id" + Style.RESET)
+        print(Style.RED + "please enter a valid username" + Style.RESET)
         return False, None
 
-    if user['is_admin'].values.astype(int)[0] == 0:
-        clear_screen()
-        print(Style.RED + "please enter a valid user id" + Style.RESET)
-        return False, None
-
-    password = str(input('Enter your password: '))
+    # password = str(input('Enter your password: '))
+    password = getpass.getpass("Enter your password:")
     if password == user['password'].values.astype(str)[0]:
         clear_screen()
         print("\n\n" + Style.GREEN + f"Login Successful" + Style.RESET)
@@ -57,6 +54,7 @@ def login():
 
 
 def add_user():
+    users = pandas.read_csv('users.csv')
     while True:
         try:
             name = str(input('Enter your name : '))
@@ -72,10 +70,20 @@ def add_user():
         result = pandas.concat([users, data])
         save_user(result)
         user = users.tail(1)
-        return True, user
+        clear_screen()
+        print(f"{Style.BOLD}{Style.GREEN} User added")
+        print_user_details(user)
+        try:
+            _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
+        except ValueError:
+            clear_screen()
+            break
+        clear_screen()
+        break
 
 
 def list_users():
+    users = pandas.read_csv('users.csv')
     while True:
         clear_screen()
         for i in range(len(users)):
