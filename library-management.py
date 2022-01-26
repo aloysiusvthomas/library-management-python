@@ -32,44 +32,52 @@ while True:
     print("6. Add Books.")
     print("7. Add User.")
     print("8. List All User.")
-    print("9. Exit.")
-    print()
-    print()
+    print("9. Exit.\n\n")
     print(Style.BOLD + "~" * 54 + Style.RESET)
 
-    choice = int(input(Style.BOLD + '\nChoice : ' + Style.RESET))
-
-    if choice == 1:
-        list_books()
-    elif choice == 2:
-        search_books()
-    elif choice == 3:
-        issue_book()
-    elif choice == 4:
-        return_book()
-    elif choice == 5:
-        issued_history()
-        continue
-    elif choice == 6:
-        add_book()
-        continue
-    elif choice == 7:
-        add_user()
-        continue
-    elif choice == 8:
-        list_users()
-        continue
-    elif choice == 9:
-        print("""
-             ████████╗██╗░░██╗░█████╗░███╗░░██╗██╗░░██╗  ██╗░░░██╗░█████╗░██╗░░░██╗
-             ╚══██╔══╝██║░░██║██╔══██╗████╗░██║██║░██╔╝  ╚██╗░██╔╝██╔══██╗██║░░░██║
-             ░░░██║░░░███████║███████║██╔██╗██║█████═╝░  ░╚████╔╝░██║░░██║██║░░░██║
-             ░░░██║░░░██╔══██║██╔══██║██║╚████║██╔═██╗░  ░░╚██╔╝░░██║░░██║██║░░░██║
-             ░░░██║░░░██║░░██║██║░░██║██║░╚███║██║░╚██╗  ░░░██║░░░╚█████╔╝╚██████╔╝
-             ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝  ░░░╚═╝░░░░╚════╝░░╚═════╝░""")
-        break
-    else:
+    try:
+        choice = int(input(Style.BOLD + '\nChoice : ' + Style.RESET))
+    except ValueError:
         clear_screen()
-        print(f"Choice: {choice}")
+        print(f"Choice: {None}")
         print(Style.BOLD + Style.RED + "Invalid Choice " + Style.RESET)
         continue
+    else:
+        if choice == 1:
+            list_books()
+            continue
+        elif choice == 2:
+            search_books()
+            continue
+        elif choice == 3:
+            issue_book()
+            continue
+        elif choice == 4:
+            return_book()
+            continue
+        elif choice == 5:
+            issued_history()
+            continue
+        elif choice == 6:
+            add_book()
+            continue
+        elif choice == 7:
+            add_user()
+            continue
+        elif choice == 8:
+            list_users()
+            continue
+        elif choice == 9:
+            print("""
+                 ████████╗██╗░░██╗░█████╗░███╗░░██╗██╗░░██╗  ██╗░░░██╗░█████╗░██╗░░░██╗
+                 ╚══██╔══╝██║░░██║██╔══██╗████╗░██║██║░██╔╝  ╚██╗░██╔╝██╔══██╗██║░░░██║
+                 ░░░██║░░░███████║███████║██╔██╗██║█████═╝░  ░╚████╔╝░██║░░██║██║░░░██║
+                 ░░░██║░░░██╔══██║██╔══██║██║╚████║██╔═██╗░  ░░╚██╔╝░░██║░░██║██║░░░██║
+                 ░░░██║░░░██║░░██║██║░░██║██║░╚███║██║░╚██╗  ░░░██║░░░╚█████╔╝╚██████╔╝
+                 ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝  ░░░╚═╝░░░░╚════╝░░╚═════╝░""")
+            break
+        else:
+            clear_screen()
+            print(f"Choice: {choice}")
+            print(Style.BOLD + Style.RED + "Invalid Choice " + Style.RESET)
+            continue

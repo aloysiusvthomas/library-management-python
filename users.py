@@ -1,6 +1,7 @@
 import getpass
 import random
 import string
+from time import sleep
 
 import pandas
 
@@ -23,9 +24,11 @@ def print_user_details(user):
 
 def login():
     users = pandas.read_csv('users.csv')
-    print(Style.BOLD + Style.GREEN + f'\n\n\t\t --LOGIN--\n' + Style.RESET)
+    print()
+    print("~" * 24 + Style.BOLD + "LOGIN" + "~" * 25 + Style.RESET)
+    print()
     try:
-        username = str(input('Enter your username : '))
+        username = str(input('\tEnter your username : '))
     except ValueError:
         clear_screen()
         print(Style.RED + "please enter a valid username" + Style.RESET)
@@ -43,12 +46,14 @@ def login():
         print(Style.RED + "please enter a valid user id" + Style.RESET)
         return False, None
 
-    password = getpass.getpass("Enter your password:")
+    password = getpass.getpass("\tEnter your password : ")
     if password == user['password'].values.astype(str)[0]:
         clear_screen()
         print("\n\n" + Style.GREEN + f"Login Successful" + Style.RESET)
         print(
             "\n" + Style.BOLD + Style.GREEN + '-' * 20 + f"Welcome Admin" + '-' * 21 + Style.RESET)
+        sleep(3)
+        clear_screen()
         return True, user
     else:
         clear_screen()
