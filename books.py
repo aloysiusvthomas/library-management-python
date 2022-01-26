@@ -9,7 +9,6 @@ from style import Style
 from users import print_user_details
 
 
-
 def save_book(data):
     data.to_csv('books.csv', index=False)
 
@@ -45,9 +44,12 @@ def list_books():
     books = pandas.read_csv('books.csv')
     while True:
         clear_screen()
-        for i in range(len(books)):
-            print_book_details(books.loc[books['id'] == i + 1])
-        print(f"{len(books)} books found")
+        if len(books) == 0:
+            for i in range(len(books)):
+                print_book_details(books.loc[books['id'] == i + 1])
+            print(f"{len(books)} books found")
+        else:
+            print(f"{Style.BOLD}{Style.RED}No books found {Style.RESET}")
         try:
             _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
         except ValueError:
@@ -60,9 +62,24 @@ def list_books():
 def search_books():
     books = pandas.read_csv('books.csv')
     clear_screen()
+    search_again = True
 
     while True:
-        print()
+        if search_again is False:
+            try:
+                var = input(f"{Style.BOLD}Search Again?(y/N) : {Style.RESET}")
+            except ValueError:
+                clear_screen()
+                break
+            var = var.upper()
+            if var == 'Y':
+                search_again = True
+                clear_screen()
+                continue
+            else:
+                clear_screen()
+                break
+
         print()
         print("~" * 24 + Style.BOLD + "SEARCH" + "~" * 24 + Style.RESET)
         try:
@@ -70,38 +87,18 @@ def search_books():
             search_choice = int(input(f"{Style.BOLD}Book ID: {Style.RESET}"))
         except ValueError:
             clear_screen()
-            print(f"{Style.BOLD}{Style.RED} No Result Found {Style.RESET}")
-            try:
-                search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
-            except ValueError:
-                continue
-            else:
-                search_again = search_again.upper()
-                if not search_again == 'Y':
-                    break
+            print(f"{Style.BOLD}{Style.RED} Please Enter a valid id {Style.RESET}")
+            continue
         else:
             book = books.loc[books['id'] == search_choice]
             if book.empty:
-                print(f"{Style.BOLD}{Style.RED} No Result Found {Style.RESET}")
-                try:
-                    search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
-                except ValueError:
-                    continue
-                else:
-                    search_again = search_again.upper()
-                    if not search_again == 'Y':
-                        break
+                print(f"\n{Style.BOLD}{Style.RED}No Result Found {Style.RESET}")
+                search_again = False
             else:
-                print(f"{Style.BOLD}{Style.GREEN} Result Found {Style.RESET}")
+                clear_screen()
+                print("~" * 24 + Style.BOLD + "RESULT" + "~" * 24 + Style.RESET)
                 print_book_details(book)
-                try:
-                    search_again = input(f"{Style.BOLD}Try Again?(Y/n) : {Style.RESET}")
-                except ValueError:
-                    continue
-                else:
-                    search_again = search_again.upper()
-                    if not search_again == 'Y':
-                        break
+                search_again = False
 
 
 def issue_book():

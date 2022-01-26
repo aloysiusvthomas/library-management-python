@@ -49,10 +49,9 @@ def login():
     password = getpass.getpass("\tEnter your password : ")
     if password == user['password'].values.astype(str)[0]:
         clear_screen()
-        print("\n\n" + Style.GREEN + f"Login Successful" + Style.RESET)
-        print(
-            "\n" + Style.BOLD + Style.GREEN + '-' * 20 + f"Welcome Admin" + '-' * 21 + Style.RESET)
-        sleep(3)
+        print("\n\n" + Style.GREEN + f"Login Successful" )
+        print(f"welcome admin Successful {Style.RESET}" )
+        sleep(1)
         clear_screen()
         return True, user
     else:
