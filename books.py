@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 from time import sleep
 
 import pandas
@@ -36,8 +37,17 @@ def print_book_details(book):
     print(Style.RESET)
 
 
-def print_history(book):
-    print(book)
+def print_history(books):
+    for items in range(len(books)):
+        print()
+        print(f"No: {items + 1}\n")
+        print(f"Book ID: {Style.YELLOW}{books['book_id'].values.astype(int)[0]}\n{Style.RESET}")
+        print(f"Book Name: {Style.YELLOW} {Style.BOLD}{books['book_name'].values.astype(str)[0]}\n {Style.RESET}")
+        print(f"Issued Date: {Style.MAGENTA}{books['issued_date'].values.astype(str)[0]}\n {Style.RESET}")
+        print(f"Return Date: {Style.MAGENTA}{books['return_date'].values.astype(str)[0]} {Style.RESET}")
+        print(Style.BLUE)
+        print('-' * 54)
+        print(Style.RESET)
 
 
 def list_books():
@@ -108,6 +118,7 @@ def issue_book():
 
     clear_screen()
     now = datetime.now()
+    after_one_week = now + timedelta(days=5)
     user = None
     while True:
         print()
@@ -177,15 +188,17 @@ def issue_book():
                             'user_id': [user['id'].values.astype(int)[0], ],
                             'username': [user['name'].values.astype(str)[0], ],
                             'book_id': [book['id'].values.astype(int)[0], ],
-                            'book_name': [book['title'].values.astype(str)[0], ],
+                            'book_name': [
+                                f"{book['title'].values.astype(str)[0]} by {book['author'].values.astype(str)[0]}", ],
                             'issued_date': [now.strftime("%m/%d/%Y"), ],
-                            'return_date': [now.strftime("%m/%d/%Y"), ],
-                            'is_returned': False,
+                            'return_date': [after_one_week.strftime("%m/%d/%Y"), ],
+                            'is_returned': "no",
                         })
                         result = pandas.concat([history, data])
                         save_history(result)
                         print(f"\n{Style.BOLD}{Style.GREEN}Book issued successfully{Style.RESET}")
-                        books.loc[books['id'] == book_id, 'available'] = books.loc[books['id'] == book_id, 'available'] - 1
+                        books.loc[books['id'] == book_id, 'available'] = books.loc[
+                                                                             books['id'] == book_id, 'available'] - 1
                         save_book(books)
                         sleep(2)
                         clear_screen()
@@ -207,41 +220,60 @@ def issue_book():
 
 
 def return_book():
+    borrowed_books = None
     history = pandas.read_csv('issued_history.csv')
     users = pandas.read_csv('users.csv')
+    books = pandas.read_csv('books.csv')
+    clear_screen()
     print()
-    print()
-    print("~" * 22 + Style.BOLD + "ISSUE BOOK" + "~" * 22 + Style.RESET)
+    print("~" * 21 + Style.BOLD + "RETURN BOOK" + "~" * 22 + Style.RESET)
     while True:
         try:
-            user_id = int(input('Enter User ID: '))
+            user_id = int(input('\nEnter User ID: '))
         except ValueError:
-            print(f"{Style.BOLD}{Style.RED} Enter a valid user id{Style.RESET}")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid user id{Style.RESET}")
             continue
         else:
             user = users.loc[users['id'] == user_id]
             if user.empty:
-                print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+                print(f"{Style.BOLD}{Style.RED}Enter a valid user id{Style.RESET}")
                 continue
 
+            print()
+            print("~" * 21 + Style.BOLD + "USER DETAILS" + "~" * 21 + Style.RESET)
+            print()
             print_user_details(user)
             borrowed_books = history.loc[history['user_id'] == user_id]
-            print_history(borrowed_books)
+            borrowed_books = borrowed_books.loc[borrowed_books['is_returned'] == 'no']
+            if borrowed_books.empty:
+                print(f"{Style.BOLD}{Style.RED}No book issued to this user{Style.RESET}")
+                sleep(2)
+                break
+            else:
+                print()
+                print("~" * 21 + Style.BOLD + "ISSUED BOOKS" + "~" * 21 + Style.RESET)
+                print_history(borrowed_books)
             break
 
     while True:
         try:
-            book_id = int(input('Enter Book ID: '))
+            book_id = int(input('\nEnter Returning Book ID: '))
         except ValueError:
-            print(f"{Style.BOLD}{Style.RED} Enter a valid book id{Style.RESET}")
+            print(f"{Style.BOLD}{Style.RED}Enter a valid book id from issued books{Style.RESET}")
             continue
         else:
-            returning_book = [borrowed_books['book_id'] == book_id]
-            if user.empty:
-                print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+            returning_book = borrowed_books.loc[borrowed_books['book_id'] == book_id]
+            if returning_book.empty:
+                print(f"{Style.BOLD}{Style.RED}Enter a valid book id from issued books{Style.RESET}")
                 continue
             else:
+                books.loc[books['id'] == book_id, 'available'] = books.loc[books['id'] == book_id, 'available'] + 1
+                save_book(books)
+                returning_book = returning_book['is_returned'] = 'yes'
+                save_history(returning_book)
                 print(f"\n\n{Style.BOLD}{Style.GREEN} Book Returned successfully{Style.RESET}")
+                sleep(2)
+                clear_screen()
                 break
 
 
