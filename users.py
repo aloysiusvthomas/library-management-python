@@ -23,7 +23,6 @@ def print_user_details(user):
 
 def login():
     users = pandas.read_csv('users.csv')
-    users = users.loc[users['is_admin'] == "1"]
     print(Style.BOLD + Style.GREEN + f'\n\n\t\t --LOGIN--\n' + Style.RESET)
     try:
         username = str(input('Enter your username : '))
@@ -39,7 +38,11 @@ def login():
         print(Style.RED + "please enter a valid username" + Style.RESET)
         return False, None
 
-    # password = str(input('Enter your password: '))
+    if user['is_admin'].values.astype(int)[0] == 0:
+        clear_screen()
+        print(Style.RED + "please enter a valid user id" + Style.RESET)
+        return False, None
+
     password = getpass.getpass("Enter your password:")
     if password == user['password'].values.astype(str)[0]:
         clear_screen()
