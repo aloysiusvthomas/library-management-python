@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from time import sleep
 
 import pandas
 
@@ -17,6 +18,40 @@ def save_book(data):
 
 def save_history(data):
     data.to_csv('issued_history.csv', index=False)
+
+
+def print_book_details(book):
+    available = book['available'].values.astype(int)[0]
+    if available > 0:
+        available = f"{Style.GREEN}{available} Copies Available {Style.RESET}"
+    else:
+        available = f"{Style.RED}{Style.BOLD} Unavailable {Style.RESET}"
+
+    print()
+    print('~' * 54)
+    print('~' * 54)
+    print(f"ID: {Style.YELLOW}{book['id'].values.astype(int)[0]}\n{Style.RESET}")
+    print(f"Title: {Style.YELLOW} {Style.BOLD}{book['title'].values.astype(str)[0]}\n {Style.RESET}")
+    print(f"Author: {Style.MAGENTA}{book['author'].values.astype(str)[0]}\n {Style.RESET}")
+    print(f"Genres: {Style.CYAN}{book['genres'].values.astype(str)[0]} {Style.RESET}\n")
+    print(f"Year: {Style.WHITE}{book['publication_year'].values.astype(int)[0]} {Style.RESET}\n")
+    print(f"Language: {Style.BOLD}{book['language'].values.astype(str)[0]} {Style.RESET}\n")
+    print(f"Available: {available}")
+    print('~' * 54)
+    print('~' * 54)
+    print()
+
+
+def print_user_details(user):
+    print()
+    print('~' * 54)
+    print('~' * 54)
+    print(
+        f"\nID: {Style.YELLOW}{user['id'].values.astype(int)[0]}{Style.RESET} \t Name: {Style.MAGENTA} {Style.BOLD}{user['name'].values.astype(str)[0]}\n {Style.RESET}"
+    )
+    print('~' * 54)
+    print('~' * 54)
+    print()
 
 
 def list_books():
@@ -80,75 +115,58 @@ def search_books():
                         break
 
 
-def print_book_details(book):
-    available = book['available'].values.astype(int)[0]
-    if available > 0:
-        available = f"{Style.GREEN}{available} Copies Available {Style.RESET}"
-    else:
-        available = f"{Style.RED}{Style.BOLD} Unavailable {Style.RESET}"
-
-    print()
-    print('~' * 54)
-    print('~' * 54)
-    print(f"ID: {Style.YELLOW}{book['id'].values.astype(int)[0]}\n{Style.RESET}")
-    print(f"Title: {Style.YELLOW} {Style.BOLD}{book['title'].values.astype(str)[0]}\n {Style.RESET}")
-    print(f"Author: {Style.MAGENTA}{book['author'].values.astype(str)[0]}\n {Style.RESET}")
-    print(f"Genres: {Style.CYAN}{book['genres'].values.astype(str)[0]} {Style.RESET}\n")
-    print(f"Year: {Style.WHITE}{book['publication_year'].values.astype(int)[0]} {Style.RESET}\n")
-    print(f"Language: {Style.BOLD}{book['language'].values.astype(str)[0]} {Style.RESET}\n")
-    print(f"Available: {available}")
-    print('~' * 54)
-    print('~' * 54)
-    print()
-
-
 def issue_book():
+    clear_screen()
     now = datetime.now()
     user = None
     while True:
-        try:
-            user_id = int(input('Enter User ID: '))
-        except ValueError:
-            print("Enter a valid number")
-            continue
-        else:
-            user = users.loc[users['id'] == user_id]
-            print(f"ID: {user['id'].values.astype(int)[0]} \t\t Name: {user['name'].values.astype(str)[0]}")
+        print()
+        print()
+        print("~" * 22 + Style.BOLD + "ISSUE BOOK" + "~" * 22 + Style.RESET)
+        user_id = int(input('Enter User ID: '))
+        user = users.loc[users['id'] == user_id]
+        if not user.empty:
+            print("~" * 21 + Style.BOLD + "USER DETAILS" + "~" * 21 + Style.RESET)
+            print_user_details(user)
             break
+        else:
+            clear_screen()
+            print(f"{Style.BOLD}{Style.RED} Enter a valid user id {Style.RESET}")
+            continue
 
     while True:
-        try:
-            book_id = int(input('Enter Book ID: '))
-        except ValueError:
-            print("please enter a valid book id")
-            continue
-        else:
-            book = books.loc[books['id'] == book_id]
-            print_book_details(book)
+        book_id = int(input('Enter Book ID: '))
+        book = books.loc[books['id'] == book_id]
+        print("~" * 21 + Style.BOLD + "BOOK DETAILS" + "~" * 21 + Style.RESET)
+        print_book_details(book)
 
-            if book['available'].values.astype(int)[0] > 0:
-                try:
-                    answer = str(input('Issue this book? (Y/n): '))
-                except ValueError:
-                    answer = 'Y'
-                answer = answer.upper()
-                if answer == 'Y':
-                    data = pandas.DataFrame({
-                        'id': [user['id'].values.astype(int)[0], ],
-                        'name': [user['name'].values.astype(str)[0], ],
-                        'book_id': [book['id'].values.astype(int)[0], ],
-                        'book_name': [book['title'].values.astype(str)[0], ],
-                        'issued_date': now.strftime("%m/%d/%Y"),
-                        'return_date': [book['title'].values.astype(str)[0], ],
-                        'is_returned': False,
-                    })
-                    result = pandas.concat([history, data])
-                    # TODO Update available books
-                    save_history(result)
-                    print("Book issued successfully")
+        if book['available'].values.astype(int)[0] > 0:
+            print("book available")
+            answer = str(input('Issue this book? (Y/n): '))
+            answer = answer.upper()
+            if answer == 'Y':
+                print("ans Y")
+                data = pandas.DataFrame({
+                    'user_id': [user['id'].values.astype(int)[0], ],
+                    'username': [user['name'].values.astype(str)[0], ],
+                    'book_id': [book['id'].values.astype(int)[0], ],
+                    'book_name': [book['title'].values.astype(str)[0], ],
+                    'issued_date': [now.strftime("%m/%d/%Y"), ],
+                    'return_date': [now.strftime("%m/%d/%Y"), ],
+                    'is_returned': False,
+                })
+                result = pandas.concat([history, data])
+                # TODO Update available books
+                save_history(result)
+                print("Book issued successfully")
+                sleep(2)
             else:
-                print("Book not available")
-            break
+                print(answer)
+                print("Y")
+                continue
+        else:
+            print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+            continue
 
 
 def return_book():
