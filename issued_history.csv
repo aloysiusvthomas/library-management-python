@@ -1,3 +1,1 @@
 id,user_id,username,book_id,book_name,issued_date,return_date,is_returned
-1,1,admin,1,Anna Karenina by Leo Tolstoy,01/26/2022,01/31/2022,no
-2,1,admin,1,Anna Karenina by Leo Tolstoy,01/26/2022,01/31/2022,yes
