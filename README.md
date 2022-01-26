@@ -3,15 +3,18 @@
   csv file used to save data
   
 
-### Prerequisites
+## Prerequisites
 - pandas 1.4.0
 - Python 3.6+
 
 
-### How to run the script
-<!--Remove the below lines and add yours -->
+## How to run the script
     python run.py
     
-  **Username:** admin
-      
-  **Password:**   pass
+## Authentication
+
+  username: admin<br/>
+  password: pass
+  
+  you can change password an user name by editing user.csv file always save is_admin as 1 
+
