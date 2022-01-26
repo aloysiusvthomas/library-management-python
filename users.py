@@ -61,6 +61,9 @@ def login():
 
 
 def add_user():
+    clear_screen()
+    print("~" * 21 + Style.BOLD + "ADD NEW USER" + "~" * 21 + Style.RESET)
+    print()
     users = pandas.read_csv('users.csv')
     while True:
         try:
@@ -76,10 +79,9 @@ def add_user():
              'is_admin': [0, ]})
         result = pandas.concat([users, data])
         save_user(result)
-        user = users.tail(1)
-        clear_screen()
-        print(f"{Style.BOLD}{Style.GREEN} User added")
-        print_user_details(user)
+        print(f"\n\n{Style.BOLD}{Style.GREEN}NEW USER ADDED {Style.RESET}\n")
+        print(f"ID: {Style.BOLD}{Style.GREEN} {last['id'].values.astype(int)[0] + 1} {Style.RESET}")
+        print(f"Name: {Style.BOLD}{Style.GREEN} {name} {Style.RESET}")
         try:
             _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
         except ValueError:
@@ -93,6 +95,9 @@ def list_users():
     users = pandas.read_csv('users.csv')
     while True:
         clear_screen()
+        print("~" * 22 + Style.BOLD + "USER LIST" + "~" * 23 + Style.RESET)
+        print()
+        print()
         for i in range(len(users)):
             print_user_details(users.loc[users['id'] == i + 1])
         print(f"{len(users)} Users found")

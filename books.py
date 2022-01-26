@@ -61,7 +61,7 @@ def list_books():
     books = pandas.read_csv('books.csv')
     while True:
         clear_screen()
-        if len(books) == 0:
+        if len(books) > 0:
             for i in range(len(books)):
                 print_book_details(books.loc[books['id'] == i + 1])
             print(f"{len(books)} books found")
