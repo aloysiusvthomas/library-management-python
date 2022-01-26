@@ -6,6 +6,7 @@ import pandas
 
 from style import clear_screen
 from style import Style
+from users import print_user_details
 
 books = pandas.read_csv('books.csv')
 users = pandas.read_csv('users.csv')
@@ -42,16 +43,8 @@ def print_book_details(book):
     print()
 
 
-def print_user_details(user):
-    print()
-    print('~' * 54)
-    print('~' * 54)
-    print(
-        f"\nID: {Style.YELLOW}{user['id'].values.astype(int)[0]}{Style.RESET} \t Name: {Style.MAGENTA} {Style.BOLD}{user['name'].values.astype(str)[0]}\n {Style.RESET}"
-    )
-    print('~' * 54)
-    print('~' * 54)
-    print()
+def print_history(book):
+    print(book)
 
 
 def list_books():
@@ -59,7 +52,7 @@ def list_books():
         clear_screen()
         for i in range(len(books)):
             print_book_details(books.loc[books['id'] == i + 1])
-
+        print(f"{len(books)} books found")
         try:
             _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
         except ValueError:
@@ -118,7 +111,6 @@ def search_books():
 def issue_book():
     clear_screen()
     now = datetime.now()
-    user = None
     while True:
         print()
         print()
@@ -137,8 +129,12 @@ def issue_book():
     while True:
         book_id = int(input('Enter Book ID: '))
         book = books.loc[books['id'] == book_id]
-        print("~" * 21 + Style.BOLD + "BOOK DETAILS" + "~" * 21 + Style.RESET)
-        print_book_details(book)
+        if book.empty:
+            print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+            continue
+        else:
+            print("~" * 21 + Style.BOLD + "BOOK DETAILS" + "~" * 21 + Style.RESET)
+            print_book_details(book)
 
         if book['available'].values.astype(int)[0] > 0:
             print("book available")
@@ -160,6 +156,7 @@ def issue_book():
                 save_history(result)
                 print("Book issued successfully")
                 sleep(2)
+                break
             else:
                 print(answer)
                 print("Y")
@@ -170,19 +167,40 @@ def issue_book():
 
 
 def return_book():
+    print()
+    print()
+    print("~" * 22 + Style.BOLD + "ISSUE BOOK" + "~" * 22 + Style.RESET)
     while True:
         try:
             user_id = int(input('Enter User ID: '))
         except ValueError:
-            print("Enter a valid number")
+            print(f"{Style.BOLD}{Style.RED} Enter a valid user id{Style.RESET}")
             continue
         else:
             user = users.loc[users['id'] == user_id]
-            print(f"ID: {user['id'].values.astype(int)[0]} \t\t Name: {user['name'].values.astype(str)[0]}")
-            # TODO Display Borrowed Books
+            if user.empty:
+                print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+                continue
+
+            print_user_details(user)
+            borrowed_books = history.loc[history['user_id'] == user_id]
+            print_history(borrowed_books)
             break
 
-    pass
+    while True:
+        try:
+            book_id = int(input('Enter Book ID: '))
+        except ValueError:
+            print(f"{Style.BOLD}{Style.RED} Enter a valid book id{Style.RESET}")
+            continue
+        else:
+            returning_book = [borrowed_books['book_id'] == book_id]
+            if user.empty:
+                print(f"{Style.BOLD}{Style.RED} Book Not Available{Style.RESET}")
+                continue
+            else:
+                print(f"\n\n{Style.BOLD}{Style.GREEN} Book Returned successfully{Style.RESET}")
+                break
 
 
 def issued_history():

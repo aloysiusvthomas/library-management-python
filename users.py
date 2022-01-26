@@ -1,3 +1,6 @@
+import random
+import string
+
 import pandas
 
 from style import clear_screen
@@ -8,6 +11,18 @@ users = pandas.read_csv('users.csv')
 
 def save_user(data):
     data.to_csv('users.csv', index=False)
+
+
+def print_user_details(user):
+    print()
+    print('~' * 54)
+    print('~' * 54)
+    print(
+        f"\nID: {Style.YELLOW}{user['id'].values.astype(int)[0]}{Style.RESET} \t Name: {Style.MAGENTA} {Style.BOLD}{user['name'].values.astype(str)[0]}\n {Style.RESET}"
+    )
+    print('~' * 54)
+    print('~' * 54)
+    print()
 
 
 def login():
@@ -44,17 +59,35 @@ def login():
     return False, None
 
 
-def register():
-    try:
-        name = str(input('Enter your name : '))
-        password = str(input('Enter your password : '))
-    except ValueError:
-        print("please enter a valid input")
-        return False, None
-    last = users.tail(1)
-    data = pandas.DataFrame(
-        {'id': [last['id'].values.astype(int)[0] + 1, ], 'name': [name, ], 'password': [password, ], 'is_admin': [0, ]})
-    result = pandas.concat([users, data])
-    save_user(result)
-    user = users.tail(1)
-    return True, user
+def add_user():
+    while True:
+        try:
+            name = str(input('Enter your name : '))
+        except ValueError:
+            print(f"{Style.BOLD}{Style.RED} Please Enter a valid name {Style.RESET}")
+            continue
+        last = users.tail(1)
+        password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+        data = pandas.DataFrame(
+            {'id': [last['id'].values.astype(int)[0] + 1, ], 'name': [name, ], 'password': [password, ],
+             'is_admin': [0, ]})
+        result = pandas.concat([users, data])
+        save_user(result)
+        user = users.tail(1)
+        return True, user
+
+
+def list_users():
+    while True:
+        clear_screen()
+        for i in range(len(users)):
+            print_user_details(users.loc[users['id'] == i + 1])
+        print(f"{len(users)} books found")
+        try:
+            _ = input(Style.BOLD + Style.BLUE + "\n\bGo to main menu?" + Style.RESET)
+        except ValueError:
+            clear_screen()
+            break
+        clear_screen()
+        break

@@ -6,6 +6,8 @@ from books import return_book
 from books import search_books
 from style import clear_screen
 from style import Style
+from users import add_user
+from users import list_users
 from users import login
 
 authenticated_user = None
@@ -52,10 +54,10 @@ while True:
         add_book()
         continue
     elif choice == 7:
-        add_book()
+        add_user()
         continue
     elif choice == 8:
-        add_book()
+        list_users()
         continue
     elif choice == 9:
         print("""
