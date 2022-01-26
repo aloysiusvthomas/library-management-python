@@ -50,7 +50,7 @@ def print_history(books):
         print(f"Book ID: {Style.YELLOW}{books['book_id'].values.astype(int)[0]}\n{Style.RESET}")
         print(f"Book Name: {Style.YELLOW} {Style.BOLD}{books['book_name'].values.astype(str)[0]}\n {Style.RESET}")
         print(f"Issued Date: {Style.MAGENTA}{books['issued_date'].values.astype(str)[0]}\n {Style.RESET}")
-        print(f"Return Date: {Style.MAGENTA}{books['return_date'].values.astype(str)[0]} {Style.RESET}")
+        print(f"Return Date: {Style.MAGENTA}{books['return_date'].values.astype(str)[0]}\n {Style.RESET}")
         print(f"Is Returned: {returned}")
         print(Style.BLUE)
         print('-' * 54)
@@ -191,7 +191,14 @@ def issue_book():
 
                     answer = answer.upper()
                     if answer == 'Y':
+                        last = history.tail(1)
+                        if last.empty:
+                            last = 1
+                        else:
+                            last = last['id'].values.astype(int)[0] + 1
+
                         data = pandas.DataFrame({
+                            'id': [last, ],
                             'user_id': [user['id'].values.astype(int)[0], ],
                             'username': [user['name'].values.astype(str)[0], ],
                             'book_id': [book['id'].values.astype(int)[0], ],
@@ -238,11 +245,18 @@ def return_book():
         try:
             user_id = int(input('\nEnter User ID: '))
         except ValueError:
+            clear_screen()
+            print()
+            print("~" * 21 + Style.BOLD + "RETURN BOOK" + "~" * 22 + Style.RESET)
             print(f"{Style.BOLD}{Style.RED}Enter a valid user id{Style.RESET}")
             continue
         else:
             user = users.loc[users['id'] == user_id]
             if user.empty:
+                clear_screen()
+                print()
+                print("~" * 21 + Style.BOLD + "RETURN BOOK" + "~" * 22 + Style.RESET)
+                print(f"{Style.BOLD}{Style.RED}Enter a valid user id{Style.RESET}")
                 print(f"{Style.BOLD}{Style.RED}Enter a valid user id{Style.RESET}")
                 continue
 
@@ -277,7 +291,11 @@ def return_book():
                 books.loc[books['id'] == book_id, 'available'] = books.loc[books['id'] == book_id, 'available'] + 1
                 save_book(books)
 
-                print(f"\n\n{Style.BOLD}{Style.GREEN} Book Returned successfully{Style.RESET}")
+                returning_book_record_id = returning_book['id'].values.astype(int)[0] + 1
+                history.loc[history['id'] == returning_book_record_id, 'is_returned'] = 'yes'
+                save_history(history)
+
+                print(f"\n\n{Style.BOLD}{Style.GREEN}Book Returned successfully{Style.RESET}")
                 sleep(2)
                 clear_screen()
                 break
